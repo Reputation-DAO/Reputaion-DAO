@@ -26,7 +26,7 @@ import {
 import { useRole } from '../../contexts/RoleContext';
 import {
   getDecayConfig,
-  configureDecay,
+  configureOrgDecay,
   type DecayConfig,
 } from '../canister/reputationDao';
 
@@ -95,7 +95,16 @@ const DecayConfigPanel: React.FC<DecayConfigPanelProps> = ({ className, onConfig
 
     try {
       console.log('Saving decay config:', config);
-      const result = await configureDecay(
+      
+      // Get orgId from localStorage
+      const orgId = localStorage.getItem('selectedOrgId');
+      if (!orgId) {
+        setError('No organization selected. Please select an organization first.');
+        return;
+      }
+
+      const result = await configureOrgDecay(
+        orgId,
         config.decayRate,
         config.decayInterval,
         config.minThreshold,

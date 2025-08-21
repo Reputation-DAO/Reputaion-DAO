@@ -50,7 +50,7 @@ export interface Awarder {
 }
 
 //modify this canisterID based on where the dfx playground hosts your backend
-const canisterId = 'mnu3f-wyaaa-aaaab-qabsa-cai';
+const canisterId = '363tq-3yaaa-aaaab-qacma-cai';
 
 export const getPlugActor = async () => {
   if (!window.ic?.plug) {
@@ -190,6 +190,31 @@ export const configureDecay = async (
     );
   } catch (error) {
     console.error('Error configuring decay:', error);
+    throw error;
+  }
+};
+
+// Configure organization-specific decay settings (Organization Admin only)
+export const configureOrgDecay = async (
+  orgId: string,
+  decayRate: number,
+  decayInterval: number,
+  minThreshold: number,
+  gracePeriod: number,
+  enabled: boolean
+): Promise<string> => {
+  try {
+    const actor = await getPlugActor();
+    return await actor.configureOrgDecay(
+      orgId,
+      BigInt(decayRate),
+      BigInt(decayInterval),
+      BigInt(minThreshold),
+      BigInt(gracePeriod),
+      enabled
+    );
+  } catch (error) {
+    console.error('Error configuring organization decay:', error);
     throw error;
   }
 };
